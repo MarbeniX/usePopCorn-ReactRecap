@@ -13,6 +13,7 @@ import Error from "./Components/Error";
 const KEY = "5209103e";
 
 export default function App() {
+    const [query, setQuery] = useState("");
     const [movies, setMovies] = useState([]);
     const [watched, setWatched] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -22,15 +23,13 @@ export default function App() {
         async function fetchMovies() {
             try {
                 setIsLoading(true);
+                setIsError("");
                 const res = await fetch(
-                    `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=avengers`
+                    `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}}`
                 );
-
                 if (!res.ok) throw new Error("Failed to fetch movies.");
-
                 const data = await res.json();
                 if (data.Response === "False") throw new Error();
-
                 setMovies(data.Search);
             } catch (err) {
                 if (err.message === "Failed to fetch movies.") {
@@ -39,24 +38,31 @@ export default function App() {
                     );
                 } else {
                     setIsError("No movies found. Try a different search term.");
+                    setMovies([]);
                 }
             } finally {
                 setIsLoading(false);
             }
         }
+        if (!query) {
+            setMovies([]);
+            setIsError("");
+            return;
+        }
         fetchMovies();
-    }, []);
+    }, [query]);
 
     return (
         <>
             <Navbar>
-                <Search />
+                <Search query={query} setQuery={setQuery} />
                 <Results movies={movies} />
             </Navbar>
 
             <Main>
                 <Box>
-                    {isLoading && <Loader />}
+                    {!query && <Loader>Start searching for movies</Loader>}
+                    {isLoading && <Loader>Loading...</Loader>}
                     {isError && <Error message={isError} />}
                     {!isError && !isLoading && <LeftBoxList movies={movies} />}
                 </Box>
