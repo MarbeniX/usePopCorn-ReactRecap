@@ -9,6 +9,7 @@ import Summary from "./Components/Summary";
 import RightBoxList from "./Components/RightBoxList";
 import Loader from "./Components/Loader";
 import Error from "./Components/Error";
+import MovieDetails from "./Components/MovieDetails";
 
 const KEY = "5209103e";
 
@@ -18,6 +19,14 @@ export default function App() {
     const [watched, setWatched] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState("");
+    const [selectedMovieId, setSelectedMovieId] = useState(null);
+
+    function handleSelectMovie(id) {
+        setSelectedMovieId((prevId) => (prevId === id ? null : id));
+    }
+    function handleCloseSelectedMovie() {
+        setSelectedMovieId(null);
+    }
 
     useEffect(() => {
         async function fetchMovies() {
@@ -64,12 +73,28 @@ export default function App() {
                     {!query && <Loader>Start searching for movies</Loader>}
                     {isLoading && <Loader>Loading...</Loader>}
                     {isError && <Error message={isError} />}
-                    {!isError && !isLoading && <LeftBoxList movies={movies} />}
+                    {!isError && !isLoading && (
+                        <LeftBoxList
+                            movies={movies}
+                            onSelectMovie={handleSelectMovie}
+                        />
+                    )}
                 </Box>
 
                 <Box>
-                    <Summary watched={watched} />
-                    <RightBoxList watched={watched} />
+                    {!selectedMovieId ? (
+                        <>
+                            <Summary watched={watched} />
+                            <RightBoxList watched={watched} />
+                        </>
+                    ) : (
+                        <MovieDetails
+                            onHandleCloseSelectedMovie={
+                                handleCloseSelectedMovie
+                            }
+                            selectedMovieId={selectedMovieId}
+                        />
+                    )}
                 </Box>
             </Main>
         </>
