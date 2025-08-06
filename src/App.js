@@ -27,6 +27,13 @@ export default function App() {
     function handleCloseSelectedMovie() {
         setSelectedMovieId(null);
     }
+    function handleAddToWatched(movie) {
+        setWatched((prevWatched) =>
+            prevWatched.some((m) => m.imdbID === movie.imdbID)
+                ? prevWatched
+                : [...prevWatched, movie]
+        );
+    }
 
     useEffect(() => {
         async function fetchMovies() {
@@ -93,6 +100,7 @@ export default function App() {
                                 handleCloseSelectedMovie
                             }
                             selectedMovieId={selectedMovieId}
+                            onAddToWatched={handleAddToWatched}
                         />
                     )}
                 </Box>
