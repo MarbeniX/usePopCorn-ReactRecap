@@ -8,11 +8,19 @@ export default function MovieDetails({
     onHandleCloseSelectedMovie,
     selectedMovieId,
     onAddToWatched,
+    watched,
 }) {
     const [movieDetails, setMovieDetails] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState("");
     const [userRating, setUserRating] = useState(0);
+
+    const movieWatched = watched
+        .map((movie) => movie.imdbID)
+        .includes(selectedMovieId);
+    const movieUserRating = watched.find(
+        (movie) => movie.imdbID === selectedMovieId
+    )?.userRating;
 
     const {
         Title: title,
@@ -94,18 +102,27 @@ export default function MovieDetails({
 
                     <section>
                         <div className="rating">
-                            <StarRating
-                                rating={10}
-                                size={24}
-                                onSetRating={setUserRating}
-                            />
-                            {userRating > 0 && (
-                                <button
-                                    className="btn-add"
-                                    onClick={handleOnAddToWatched}
-                                >
-                                    + Add to list
-                                </button>
+                            {!movieWatched ? (
+                                <>
+                                    <StarRating
+                                        rating={10}
+                                        size={24}
+                                        onSetRating={setUserRating}
+                                    />
+                                    {userRating > 0 && (
+                                        <button
+                                            className="btn-add"
+                                            onClick={handleOnAddToWatched}
+                                        >
+                                            + Add to list
+                                        </button>
+                                    )}
+                                </>
+                            ) : (
+                                <p>
+                                    ⭐ You rated this movie with{" "}
+                                    {movieUserRating}
+                                </p>
                             )}
                         </div>
                         <p>

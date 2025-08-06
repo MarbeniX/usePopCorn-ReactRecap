@@ -1,4 +1,4 @@
-export default function MovieItemRatings({ movie }) {
+export default function MovieItemRatings({ movie, onDeleteFromWatched }) {
     return (
         <li key={movie.imdbID}>
             <img src={movie.poster} alt={`${movie.title} poster`} />
@@ -16,6 +16,12 @@ export default function MovieItemRatings({ movie }) {
                     <span>⏳</span>
                     <span>{movie.runtime} min</span>
                 </p>
+                <button
+                    className="btn-delete"
+                    onClick={() => onDeleteFromWatched(movie.imdbID)}
+                >
+                    x
+                </button>
             </div>
         </li>
     );
