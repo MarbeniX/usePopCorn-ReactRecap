@@ -16,10 +16,13 @@ const KEY = "5209103e";
 export default function App() {
     const [query, setQuery] = useState("");
     const [movies, setMovies] = useState([]);
-    const [watched, setWatched] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState("");
     const [selectedMovieId, setSelectedMovieId] = useState(null);
+    const [watched, setWatched] = useState(() => {
+        const saveWatched = localStorage.getItem("watched");
+        return saveWatched ? JSON.parse(saveWatched) : [];
+    });
 
     function handleSelectMovie(id) {
         setSelectedMovieId((prevId) => (prevId === id ? null : id));
@@ -77,6 +80,10 @@ export default function App() {
             controller.abort();
         };
     }, [query]);
+
+    useEffect(() => {
+        localStorage.setItem("watched", JSON.stringify(watched));
+    }, [watched]);
 
     return (
         <>
