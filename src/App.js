@@ -15,7 +15,6 @@ import { useLocalStorage } from "./hooks/useLocalStorage";
 
 export default function App() {
     const [query, setQuery] = useState("");
-
     const [selectedMovieId, setSelectedMovieId] = useState(null);
     const { movies, isLoading, isError } = useMovies(query);
     const [watched, setWatched] = useLocalStorage([], "watched");

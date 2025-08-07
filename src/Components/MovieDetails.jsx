@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import StarRating from "./RatingStars";
 import Loader from "./Loader";
+import { useKey } from "../hooks/useKey";
 
 const KEY = "5209103e";
 
@@ -14,6 +15,7 @@ export default function MovieDetails({
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState("");
     const [userRating, setUserRating] = useState(0);
+    useKey("Escape", onHandleCloseSelectedMovie);
 
     const countRatingDecisions = useRef(0);
 
@@ -84,18 +86,6 @@ export default function MovieDetails({
             document.title = "usePopCorn";
         };
     }, [title]);
-
-    useEffect(() => {
-        function callBack(e) {
-            if (e.code === "Escape") {
-                onHandleCloseSelectedMovie();
-            }
-        }
-        document.addEventListener("keydown", callBack);
-        return () => {
-            document.removeEventListener("keydown", callBack);
-        };
-    }, [onHandleCloseSelectedMovie]);
 
     useEffect(() => {
         if (userRating) {
