@@ -41,12 +41,14 @@ export default function App() {
     }
 
     useEffect(() => {
+        const controller = new AbortController();
         async function fetchMovies() {
             try {
                 setIsLoading(true);
                 setIsError("");
                 const res = await fetch(
-                    `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}}`
+                    `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}}`,
+                    { signal: controller.signal }
                 );
                 if (!res.ok) throw new Error("Failed to fetch movies.");
                 const data = await res.json();
@@ -71,6 +73,9 @@ export default function App() {
             return;
         }
         fetchMovies();
+        return () => {
+            controller.abort();
+        };
     }, [query]);
 
     return (

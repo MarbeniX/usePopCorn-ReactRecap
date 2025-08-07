@@ -76,7 +76,23 @@ export default function MovieDetails({
     useEffect(() => {
         if (!title) return;
         document.title = `Movie | ${title}`;
+
+        return () => {
+            document.title = "usePopCorn";
+        };
     }, [title]);
+
+    useEffect(() => {
+        function callBack(e) {
+            if (e.code === "Escape") {
+                onHandleCloseSelectedMovie();
+            }
+        }
+        document.addEventListener("keydown", callBack);
+        return () => {
+            document.removeEventListener("keydown", callBack);
+        };
+    }, [onHandleCloseSelectedMovie]);
 
     return (
         <div className="details">
