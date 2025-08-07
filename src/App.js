@@ -72,7 +72,9 @@ export default function App() {
             setIsError("");
             return;
         }
+
         fetchMovies();
+
         return () => {
             controller.abort();
         };
